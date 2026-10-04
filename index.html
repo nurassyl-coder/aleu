@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Әлеуметтік желілердің қоғамға әсері</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for rendering the pie chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light grayish-blue background */
+            color: #1e293b; /* Dark slate for text */
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden w-full max-w-4xl flex flex-col md:flex-row">
+        
+        <!-- Left Side: Chart Section -->
+        <div class="p-8 w-full md:w-1/2 flex flex-col justify-center bg-gray-50 border-r border-gray-100">
+            <h2 class="text-xl font-semibold text-center mb-6 text-gray-800">
+                Сауалнама нәтижелері
+            </h2>
+            <div class="chart-container">
+                <canvas id="myPieChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Right Side: Data and Description Section -->
+        <div class="p-8 w-full md:w-1/2 flex flex-col justify-center">
+            <h1 class="text-2xl font-bold mb-4 text-gray-900 leading-tight">
+                Әлеуметтік желілердің қоғамды біріктіру немесе бөлу әсері
+            </h1>
+            <p class="text-gray-600 mb-6 text-sm">
+                Бұл деректерден көріп отырғанымыздай, респонденттердің пікірлері қалай бөлінгені төменде көрсетілген:
+            </p>
+
+            <ul class="space-y-4">
+                <!-- Data Item 1 -->
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 h-6 w-6 rounded-full bg-[#3b82f6] inline-flex items-center justify-center mt-1"></span>
+                    <div class="ml-4">
+                        <p class="text-lg font-semibold text-gray-900">53%</p>
+                        <p class="text-sm text-gray-700">респондент әлеуметтік желілердің біріктіруші де, бөлуші де әсері тең деп есептейді.</p>
+                    </div>
+                </li>
+                
+                <!-- Data Item 2 -->
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 h-6 w-6 rounded-full bg-[#10b981] inline-flex items-center justify-center mt-1"></span>
+                    <div class="ml-4">
+                        <p class="text-lg font-semibold text-gray-900">37%</p>
+                        <p class="text-sm text-gray-700">респондент оның біріктіруші күші басым екенін айтады.</p>
+                    </div>
+                </li>
+
+                <!-- Data Item 3 -->
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 h-6 w-6 rounded-full bg-[#ef4444] inline-flex items-center justify-center mt-1"></span>
+                    <div class="ml-4">
+                        <p class="text-lg font-semibold text-gray-900">5%</p>
+                        <p class="text-sm text-gray-700">ғана оның көбірек бөлетінін атап өтсе.</p>
+                    </div>
+                </li>
+
+                <!-- Data Item 4 -->
+                <li class="flex items-start">
+                    <span class="flex-shrink-0 h-6 w-6 rounded-full bg-[#f59e0b] inline-flex items-center justify-center mt-1"></span>
+                    <div class="ml-4">
+                        <p class="text-lg font-semibold text-gray-900">5%</p>
+                        <p class="text-sm text-gray-700">нақты жауап беру қиын болған.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('myPieChart').getContext('2d');
+            
+            // Data extracted from the image
+            const data = {
+                labels: [
+                    'Тең әсері бар',
+                    'Біріктіруші күші басым',
+                    'Көбірек бөледі',
+                    'Жауап беру қиын'
+                ],
+                datasets: [{
+                    label: 'Сауалнама нәтижесі (%)',
+                    data: [53, 37, 5, 5],
+                    backgroundColor: [
+                        '#3b82f6', // Blue for 53%
+                        '#10b981', // Green for 37%
+                        '#ef4444', // Red for 5%
+                        '#f59e0b'  // Yellow/Amber for 5%
+                    ],
+                    borderColor: [
+                        '#ffffff',
+                        '#ffffff',
+                        '#ffffff',
+                        '#ffffff'
+                    ],
+                    borderWidth: 2,
+                    hoverOffset: 10 // Pushes the slice out when hovered
+                }]
+            };
+
+            // Chart Configuration
+            const config = {
+                type: 'pie', // 'doughnut' can also be used for a ring shape
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false, // Hidden legend as we have a custom HTML list
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            };
+
+            // Render the chart
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
